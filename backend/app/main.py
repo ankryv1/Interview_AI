@@ -1,0 +1,27 @@
+from fastapi import FastAPI
+from app.routes import resume
+from app.config import APP_NAME, APP_VERSION
+from app.routes import auth_route
+from contextlib import asynccontextmanager
+from app.database import init_db
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db()
+    yield
+
+
+app = FastAPI(title=APP_NAME, version=APP_VERSION, lifespan=lifespan)
+
+app.include_router(auth_route.router)
+
+app.include_router(resume.router)
+
+
+@app.get("/")
+def read_root():
+    return{
+        'message': " hii how are you"
+    }
+
