@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from app.routes import resume
+
+from app.routes import resume_route
 from app.config import APP_NAME, APP_VERSION
 from app.routes import auth_route
 from contextlib import asynccontextmanager
@@ -16,7 +17,9 @@ app = FastAPI(title=APP_NAME, version=APP_VERSION, lifespan=lifespan)
 
 app.include_router(auth_route.router)
 
-app.include_router(resume.router)
+app.include_router(resume_route.router)
+
+
 
 
 @app.get("/")

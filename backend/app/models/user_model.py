@@ -1,8 +1,10 @@
 from datetime import datetime
 from beanie import Document
 from pydantic import EmailStr, Field
+from bson import ObjectId
 
 class User(Document):
+   
     username: str
     password: str
     email: EmailStr
