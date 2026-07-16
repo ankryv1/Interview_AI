@@ -12,5 +12,5 @@ class Resume(Document):
     uploaded_at: datetime = Field(default_factory=datetime.utcnow)
 
 
-class Settings:
-    name = "resumes"
+    class Settings:
+        name = "resumes"

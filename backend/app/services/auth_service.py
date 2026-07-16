@@ -28,6 +28,6 @@ async def login_service(login_data: LoginSchema):
     
     is_valid = verify_password(login_data.password, user_found.password)
     if not is_valid:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(status_code=401, detail="Invalid email or password")
 
     return user_found
