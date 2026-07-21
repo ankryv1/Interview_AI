@@ -9,7 +9,6 @@ Resume Context:
 
 Return your answer in following format:
 
-```json
 {{
     "experience": [list of experience],
     "education": [list of education],
@@ -20,5 +19,5 @@ Return your answer in following format:
     "Weaknesses": [List of weaknesses],
     Suggestions for Improvement: [list of suggestions]                                                                                                                                                                                                                                                                                                                       
 }}
-```                                                                                                                                                                                                                              
+                                                                                                                                                                                                                             
 """)

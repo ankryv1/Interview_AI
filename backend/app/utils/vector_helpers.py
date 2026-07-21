@@ -5,6 +5,7 @@ def get_resume_context(resume_id: str, question: str,k: int =3):
         search_kwargs= {"k": k, "filter": {"resume_id": resume_id}}
     )
 
+
     docs = retriever.invoke(question)
 
     context = "\n\n".join(doc.page_content for doc in docs)
