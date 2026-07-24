@@ -12,7 +12,7 @@ class InterviewSession(Document):
     interview_type: str
 
     total_questions: int
-    current_question: int = 0
+    current_question: int = 1
 
     conversation: list[InterviewTurn] = Field(default_factory=list)
 

@@ -13,7 +13,17 @@ class StartInterviewRequest(BaseModel):
 class InterviewTurn(BaseModel):
     question: str
     answer: Optional[str] = None
-    feerback: Optional[str] = None
+    feedback: Optional[str] = None
+    improvement: str | None = None
+    follow_up: bool = False
     score: Optional[int] = None
     topic: str
     question_number: int
+
+
+class AnswerInterviewRequest(BaseModel):
+    session_id: str
+    answer: str
+
+
+#    this part contains all API request/response schemas
