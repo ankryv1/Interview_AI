@@ -6,7 +6,7 @@ from app.schemas.interview_schema import InterviewTurn
 class InterviewSession(Document):
     user_id: str
     resume_id: str
-
+    resume_context: str
     role:str
     difficulty: str
     interview_type: str
@@ -16,7 +16,6 @@ class InterviewSession(Document):
 
     conversation: list[InterviewTurn] = Field(default_factory=list)
 
-    scores: list = Field(default_factory=list)
     created_at: datetime = Field(default_factory= datetime.utcnow)
     completed: bool= False
 

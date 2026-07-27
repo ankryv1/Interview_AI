@@ -17,7 +17,6 @@ class InterviewTurn(BaseModel):
     improvement: str | None = None
     follow_up: bool = False
     score: Optional[int] = None
-    topic: str
     question_number: int
 
 
