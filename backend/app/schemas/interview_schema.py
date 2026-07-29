@@ -18,6 +18,7 @@ class InterviewTurn(BaseModel):
     follow_up: bool = False
     score: Optional[int] = None
     question_number: int
+    is_follow_up: bool = False
 
 
 class AnswerInterviewRequest(BaseModel):
