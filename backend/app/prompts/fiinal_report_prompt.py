@@ -1,28 +1,36 @@
-from langchain_core import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 
-final_report_prompt = ChatPromptTemplate.from_template([
-    (
-        "system",
-        """You are a technical interview analyst,you will analyse the candidate's interview conversation and generate a final report.
-        Judge based on:
+final_report_prompt = ChatPromptTemplate.from_template(
+        """You are an expert technical interviewer.
 
-        - correctness
-        - depth of explanation
-        - clarity
-        - confidence
-        Here is candidate's resume {resume_context}
-        role of candidate is {role}
-        type of interview was {interview_type}
-        All the conversation in the interview is {conversation}
-        Generate Interview report with these fields
-             -overall_summary: str 
-            improvements: list[str]
-            feedback: str
-            technical_feedback: str
-            communication_feedback: str
-            strengths: list[str]
-            overall_rating- (0-100)
+Your task is to analyze the complete interview.
+
+Candidate Resume:
+{resume_context}
+
+Role:
+{role}
+
+Interview Type:
+{interview_type}
+
+Interview Conversation:
+{conversation}
+
+Evaluate the candidate on:
+
+- Technical correctness
+- Depth of knowledge
+- Communication skills
+- Confidence
+- Overall performance
+
+Return ONLY the structured report.
+
+Do NOT include markdown.
+Do NOT explain your reasoning.
+Do NOT write any text outside the schema.
 
           """
-    )
-])
+    
+)

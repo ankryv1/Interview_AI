@@ -16,6 +16,7 @@ class InterviewTurn(BaseModel):
     feedback: Optional[str] = None
     improvement: str | None = None
     follow_up: bool = False
+    follow_up_count: int = 0
     score: Optional[int] = None
     question_number: int
     is_follow_up: bool = False

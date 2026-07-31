@@ -4,5 +4,5 @@ retriever = vector_store.as_retriever( search_kwargs ={"k":3, "filter":{"resume_
 
 docs = retriever.invoke("What is name of programs does the candidate have experience in?")
 
-for doc in docs:
+for doc in docs:44444444444444444444444
     print(doc.page_content)

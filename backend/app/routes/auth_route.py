@@ -16,7 +16,7 @@ async def login(credentials: LoginSchema, response: Response):
     token = create_access_token({"user_id": str(user.id),
                                  "email": user.email})
     
-    response.set_cookie(key="access_token", value=token, httponly=True, secure=False, samesite="Lax", max_age=7200)
+    response.set_cookie(key="access_token", value=token, httponly=True, secure=False, samesite="Lax", max_age=86400)
     return {"message": "Login Successful", "user": user}
 
 @router.post("/signup")

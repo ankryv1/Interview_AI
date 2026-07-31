@@ -7,6 +7,7 @@ from app.prompts.followup_prompt import followup_prompt
 from app.prompts.next_question_prompt import next_question_prompt
 from app.prompts.fiinal_report_prompt import final_report_prompt
 from app.rag.llm import llm
+from app.rag.llm import report_llm
 from app.models.interview_model import InterviewSession
 from app.schemas.interview_schema import StartInterviewRequest, InterviewTurn
 
@@ -98,24 +99,28 @@ async def answer_interview_service(data ,current_user):
     current_turn.follow_up = result.follow_up_required
 
     await session.save()
-    if current_turn.follow_up:
+    if current_turn.follow_up and current_turn.follow_up_count < 2:
+
         r = await followup_question_service(current_turn.question, current_turn.answer, current_turn.feedback)
 
-        turn = InterviewTurn( question=r, question_number=session.current_question, is_follow_up=True)
+        current_turn.follow_up_count +=1
+        turn = InterviewTurn( question=r, question_number=session.current_question, is_follow_up=True, follow_up_count=current_turn.follow_up_count)
+        
         session.conversation.append(turn)
         await session.save()
         return {"type_of": "follow_up", "question": r}
     
     elif session. current_question < session.total_questions:
-        r = await next_question_service(session)
-
         session.current_question+=1
+
+        r = await next_question_service(session)
+        
         turn= InterviewTurn(question=r, question_number = session.current_question)
         session.conversation.append(turn)
         await session.save();
         return {"type_of": "next_question", "question": r}
     else:
-       report= await generate_report_service(session, current_user)
+       report= await generate_report_service(session)
        session.final_report = report
        await session.save()
        return {"type": "completed", "report": report}
@@ -148,7 +153,7 @@ async def next_question_service(session):
     result = await llm.ainvoke(prompt)
     return result.content
 
-async def generate_report_service(session, current_user):
+async def generate_report_service(session):
 
     conversation=""
     for turn in session.conversation:
@@ -159,11 +164,12 @@ async def generate_report_service(session, current_user):
         improvement: {turn.improvement}
         Scores: {turn.score}"""
     prompt = final_report_prompt.format_messages(resume_context=session.resume_context, 
-                                    conversation=session.conversation,
+                                    conversation=conversation,
                                     role=session.role,
                                     difficulty= session.difficulty,
                                     interview_type=session.interview_type,
                                     )
-    structured_llm =  llm.with_structured_output(ReportSchema)
-    report = await structured_llm.ainvoke(prompt)
-    return {"report": report}
+    structured_report_llm =  report_llm.with_structured_output(ReportSchema)
+    report = await structured_report_llm.ainvoke(prompt)
+    session.completed = True
+    return  report
