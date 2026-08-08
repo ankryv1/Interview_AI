@@ -1,8 +1,10 @@
 from beanie import Document
 from datetime import datetime
 from pydantic import Field
-from app.schemas.interview_schema import InterviewTurn 
-from app.schemas.llm_schema import ReportSchema  
+from app.schemas.interview_schema import InterviewTurn
+from app.schemas.interview_schema import InterviewStage 
+from app.schemas.llm_schema import ReportSchema
+from app.graph.state import InterviewState  
 
 class InterviewSession(Document):
     user_id: str
@@ -12,8 +14,11 @@ class InterviewSession(Document):
     difficulty: str
     interview_type: str
 
+    stage: InterviewStage = Field(default= InterviewStage.INTRODUCTION)
+
     total_questions: int
     current_question: int = 1
+    introduction_followup: bool= False
 
     conversation: list[InterviewTurn] = Field(default_factory=list)
 

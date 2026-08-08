@@ -40,6 +40,7 @@ async def me(access_token: str = Cookie(None)):
     print(access_token)
     if not access_token:
         raise HTTPException(status_code=401, detail="Access token missing")
+    
     payload = verify_access_token(access_token)
     if payload is None:
         raise HTTPException(status_code=401, detail="Invalid or expired Token")

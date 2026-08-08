@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from enum import Enum
 
 class StartInterviewRequest(BaseModel):
     resume_id: str
@@ -26,5 +27,9 @@ class AnswerInterviewRequest(BaseModel):
     session_id: str
     answer: str
 
+class InterviewStage(str, Enum):
+    INTRODUCTION = "INTRODUCTION"
+    TECHNICAL = "TECHNICAL"
+    COMPLETED = "COMPLETED"
 
 #    this part contains all API request/response schemas
