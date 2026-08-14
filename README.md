@@ -33,3 +33,33 @@ Followup  Next Question
          │
       Yes ▼
     Final Report
+
+
+##   The Overall Architecture ,how the rerquest Flows in the Backend Part is
+
+                MongoDB
+                    │
+                    ▼
+            InterviewSession
+                    │
+                    ▼
+      answer_interview_service
+                    │
+          Build InterviewState
+                    │
+                    ▼
+            LangGraph Workflow
+                    │
+                    ▼
+            Updated InterviewState
+                    │
+                    ▼
+      Copy values back to Session
+                    │
+                    ▼
+              await session.save()
+                    │
+                    ▼
+                API Response
+
+   
