@@ -1,0 +1,10 @@
+So in your project: Interview.jsx (a page) will likely call something like useInterviewSession() (a hook), which internally pulls from InterviewContext (context) and calls services/interviewService.js (API layer) — keeping each file doing exactly one job.
+
+
+
+Folder	Answers...
+services/	"How do I talk to the backend?"
+context/	"What global state exists across the whole app?"
+hooks/	    "How do I package logic + state so a component can use it in one line?"
+pages/	    "What does this whole screen do?"
+components/	"What does this piece of UI look like?"
