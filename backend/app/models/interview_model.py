@@ -18,7 +18,7 @@ class InterviewSession(Document):
 
     total_questions: int
     current_question: int = 1
-    introduction_followup: bool= False
+    is_introduction_followup: bool= False
 
     conversation: list[InterviewTurn] = Field(default_factory=list)
 

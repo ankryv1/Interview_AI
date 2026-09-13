@@ -16,7 +16,6 @@ class InterviewTurn(BaseModel):
     answer: Optional[str] = None
     feedback: Optional[str] = None
     improvement: str | None = None
-    follow_up: bool = False
     follow_up_count: int = 0
     score: Optional[int] = None
     question_number: int
@@ -33,3 +32,39 @@ class InterviewStage(str, Enum):
     COMPLETED = "COMPLETED"
 
 #    this part contains all API request/response schemas
+
+
+
+#    Flow to update current_question
+
+# What happens after Question 3?
+
+# User answers.
+
+# Create
+
+# InterviewTurn(
+#     question_number=3,
+#     ...
+# )
+
+# Append it.
+
+# Now
+
+# conversation = [
+
+# Turn1,
+
+# Turn2,
+
+# Turn3
+# ]
+
+# Then update
+
+# current_question += 1
+
+# Now
+
+# current_question = 4

@@ -16,7 +16,7 @@ async def retrive_resume_context(resume_id:str, question: str):
     
     response = llm.invoke(prompt)
     return {"answer": response.content}
- 
+    
 async def analyse_resume_service(resume_id: str):
   context = get_resume_context(resume_id, "Analyse the complete resume",5)
 

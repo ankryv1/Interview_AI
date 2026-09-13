@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes import resume_route
 from app.config import APP_NAME, APP_VERSION
@@ -26,7 +27,11 @@ app.include_router(rag_route.router)
 
 app.include_router(interview_route.router)
 
-
+app.add_middleware(CORSMiddleware,
+                    allow_origins=["http://localhost:5173"],  # your frontend's exact URL
+                    allow_credentials=True,
+                    allow_methods=["*"],
+                    allow_headers=["*"],)
 
 @app.get("/")
 def read_root():

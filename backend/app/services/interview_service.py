@@ -5,7 +5,7 @@ from app.prompts.interview_question_prompt import interview_question_prompt
 from app.prompts.evaluation_prompt import evaluation_prompt
 from app.prompts.followup_prompt import followup_prompt
 from app.prompts.next_question_prompt import next_question_prompt
-from app.prompts.fiinal_report_prompt import final_report_prompt
+from app.prompts.final_report_prompt import final_report_prompt
 from app.rag.llm import llm
 from app.rag.llm import report_llm
 
@@ -61,24 +61,13 @@ async def start_interview_service(data: StartInterviewRequest, current_user):
             "stage": InterviewStage.INTRODUCTION,
         }
     updated_state = await start_interview_graph.ainvoke(state)
-    # prompt = interview_question_prompt.format_messages(
-    #     context=context, role=data.role, difficulty=data.difficuilty,
-    #     interview_type=data.interview_type, total_questions=data.total_questions
-    #     )
 
-    # response = llm.invoke(prompt)
-    # print(response)
-    # first_turn = InterviewTurn(
-    #     question_number=1,
-    #     question=response.content
-    # )
-
-    session.conversation.append(InterviewTurn(
-        question_number=1, question=updated_state["current_question_text"]))
+    session.conversation = updated_state["conversation"]
+    current_conversation = session.conversation[-1]
     await session.save()
 
     return {"session_id":str(session.id),
-            "question":updated_state["current_question_text"],
+            "question":current_conversation.question,
             "question_number":updated_state["current_question"]
             }
 
@@ -113,10 +102,8 @@ async def answer_interview_service(data ,current_user):
         raise HTTPException(status_code=404, detail="Interview Session not found")
     if session.user_id != str(current_user.id):
         raise HTTPException( status_code=401, detail="Unauthorized Request")
-
-    current_turn = session.conversation[-1]
-    current_turn.answer = data.answer
-    session.save();
+ 
+     
     state= {
         "user_id": current_user.id,
         "session_id" : str(session.id),
@@ -125,19 +112,30 @@ async def answer_interview_service(data ,current_user):
         "difficulty": session.difficulty,
         "interview_type": session.interview_type,
         "stage": session.stage,
-        "current_question": current_turn.question,
+        "current_question": session.current_question,
+        "total_questions": session.total_questions,
         "resume_context": session.resume_context,
         "conversation": session.conversation,
-        "user_answer": data.answer
+        "user_answer": data.answer,
+        "is_introduction_followup": session.is_introduction_followup,
+        "final_report": session.final_report
     }
-   
+    
     updated_state = await answer_interview_graph.ainvoke(state)
+
+    
     print("Updated_State:", updated_state)
+    session.conversation= updated_state["conversation"]
+    session.stage = updated_state["stage"]
+    session.current_question= updated_state["current_question"]
+    session.final_report = updated_state["final_report"]
+    session.completed = updated_state.get("completed", session.completed)
+    session.is_introduction_followup = updated_state["is_introduction_followup"]
+    await session.save()
     return updated_state
     
     
     
-
 async def followup_question_service(question, answer, feedback):
     prompt = followup_prompt.format_messages(question=question, answer=answer, feedback=feedback)
 

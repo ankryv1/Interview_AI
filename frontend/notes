@@ -8,3 +8,6 @@ context/	"What global state exists across the whole app?"
 hooks/	    "How do I package logic + state so a component can use it in one line?"
 pages/	    "What does this whole screen do?"
 components/	"What does this piece of UI look like?"
+
+
+children REACT me jo bhi nest between opening and closing tags vo le leta h AUTOMATICALLY

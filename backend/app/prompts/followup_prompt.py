@@ -4,8 +4,7 @@ followup_prompt = ChatPromptTemplate.from_messages([
     (
         "system",
         """"
-        You are senior Software Engineer,
-        You are interviewing a candidate.
+        You are senior Software Engineer,interviewing a candidate.
         Ask a concise follow-up question that helps the candidates improve or clarify the previous question.
 
         Rules:

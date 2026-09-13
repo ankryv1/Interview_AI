@@ -42,7 +42,149 @@ async def me(access_token: str = Cookie(None)):
         raise HTTPException(status_code=401, detail="Access token missing")
     
     payload = verify_access_token(access_token)
+    print(payload)
     if payload is None:
         raise HTTPException(status_code=401, detail="Invalid or expired Token")
     return { "message": "Authenticated", "user": payload }
 
+
+
+# At this point, React doesn't need to store the JWT.
+
+# Then:
+
+#                     Browser
+#                        │
+#                        │ has access_token cookie
+#                        ▼
+#                   AuthContext
+#                        │
+#                        │ GET /auth/me
+#                        ▼
+#                     FastAPI
+#                        │
+#                        ▼
+#                  Verify JWT
+#                        │
+#                        ▼
+#                  Return payload
+#                        │
+#                        ▼
+#               setUser(payload.user)
+#                        │
+#                        ▼
+#              isAuthenticated = true
+
+# That's why /me exists.
+
+# 2. What should /me return?
+
+# Your current route:
+
+# @router.get("/me")
+# async def me(access_token: str = Cookie(None)):
+
+# is fine for now.
+
+# It returns:
+
+# {
+#     "message": "Authenticated",
+#     "user": {
+#         "user_id": "...",
+#         "email": "..."
+#     }
+# }
+
+# because your login JWT contains:
+
+# {
+#     "user_id": str(user.id),
+#     "email": user.email
+# }
+
+# Notice something important:
+
+# /me doesn't need the password.
+
+# That's exactly what we want.
+
+# 3. When should /me be called?
+
+# When your React application starts.
+
+# For example:
+
+# User opens:
+
+# http://localhost:5173/
+
+# React starts.
+
+# Then:
+
+# AuthProvider mounts
+#        ↓
+# GET /auth/me
+#        ↓
+# Does browser have valid cookie?
+#        │
+#        ├── YES
+#        │    ↓
+#        │  user found
+#        │    ↓
+#        │  setUser(...)
+#        │
+#        └── NO
+#             ↓
+#           user = null
+
+# So /me is basically:
+
+# "Backend, check whether this browser already has a valid login."
+
+# This is particularly important after a page refresh.
+
+# 4. Why can't we just set user during login?
+
+# You could do:
+
+# Login
+#  ↓
+# response contains user
+#  ↓
+# setUser(response.user)
+
+# But there's a problem.
+
+# Suppose the user refreshes the browser:
+
+# F5
+
+# React state disappears.
+
+# Your:
+
+# const [user, setUser] = useState(null);
+
+# goes back to:
+
+# user = null
+
+# But the HTTP-only cookie still exists.
+
+# So React needs a way to ask:
+
+# "Am I still logged in?"
+
+# That's /me.
+
+# Therefore:
+
+# Login
+
+# Used to establish authentication.
+
+# /me
+
+# Used to restore/check authentication state.

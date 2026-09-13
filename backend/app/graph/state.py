@@ -1,5 +1,6 @@
 from typing import List, Optional
 from typing_extensions import TypedDict
+from app.schemas.llm_schema import EvaluationResult, ReportSchema
 
 from app.schemas.interview_schema import InterviewStage, InterviewTurn
 
@@ -16,6 +17,9 @@ class InterviewState(TypedDict):
     difficulty: str
     interview_type: str
     total_questions: int
+    followup_required: Optional[bool]
+    is_introduction_followup: bool
+    user_answer: str
 
     # Resume Context (RAG)
     resume_context: str
@@ -24,15 +28,12 @@ class InterviewState(TypedDict):
     # Current Interview Progress
     # ==============================
     current_question: int
-    completed: bool
-    state: InterviewStage
+    completed: Optional[bool]
+    stage: InterviewStage
 
     # ==============================
     # Current Turn
     # ==============================
-    current_question_text: str
-    user_answer: Optional[str]
-
 
     # ==============================
     # Conversation History
@@ -42,9 +43,9 @@ class InterviewState(TypedDict):
     # ==============================
     # Evaluation
     # ==============================
+    
    
-   
-    final_report: Optional[str]
+    final_report: Optional[ReportSchema]
 
 
 #   I used stage here only, as service would get stage from the DB and will pass in the node

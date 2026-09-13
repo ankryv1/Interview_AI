@@ -17,7 +17,6 @@ async def create_user_service(user: NewUserSignup):
     new_user = User(username=user.username, email=user.email, password=hashed_password)
 
     await new_user.insert()
-    token = create_access_token({"user_id": str(new_user.id), "email": new_user.email})
 
     return new_user
 
