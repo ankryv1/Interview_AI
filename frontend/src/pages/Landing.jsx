@@ -13,7 +13,6 @@ export default function Landing() {
 
   return (
     <>
-      <Navbar />
       {/*  HERO section */}
       <section className="bg-[#080B12]">
         <Container className="py-24 text-center">
@@ -22,7 +21,7 @@ export default function Landing() {
             <span className="bg-red-600 px-3 pb-4 rounded-full text-6xl font-semibold mx-1 align-middle text-[#F5F7FA]">
               Your
             </span>{" "}
-            <span className='text-orange-300'>Technical</span>  <span className="text-[#A78BFA]">Interviews</span>
+            <span className='text-orange-300 italic '>TECHNICAL</span>  <span className="text-[#A78BFA]">Interviews</span>
           </h1>
 
           <p className="mt-6 text-lg text-[#98A2B3] max-w-2xl mx-auto">
@@ -41,7 +40,7 @@ export default function Landing() {
       {/* Feature Section */}
       <section className="py-20 bg-[#0D111C]">
         <Container>
-          <div className="bg-[#171D2B] px-10 py-4 rounded-4xl w-fit mx-auto">
+          <div className="bg-orange-900 px-10 py-4 rounded-4xl w-fit mx-auto">
             <h2 className="text-4xl font-bold text-center text-[#F5F7FA]">
               Why Choose InterviewAI?
             </h2>
@@ -205,7 +204,6 @@ export default function Landing() {
         </Container>
       </section>
 
-      <Footer />
     </>
   );
 }

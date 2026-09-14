@@ -7,18 +7,22 @@ import  UploadResume  from "../pages/UploadResume";
 import InterviewSetup  from "../pages/InterviewSetup";
 import Interview from "../pages/Interview";
 import  Report  from "../pages/Report";
+import MainLayout from "../components/layout/MainLayout";
 
 export const AppRoutes = () =>{
     return(
     <Routes>
-        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/upload-resume" element={<UploadResume />} />
-        <Route path="/interview/setup" element={<InterviewSetup />} />
-        <Route path="/interview/:sessionId" element={<Interview />} />
-        <Route path="/report/:sessionId" element={<Report />} />
+        <Route element={<MainLayout/>}>
+            <Route path="/" element={<Landing />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/upload-resume" element={<UploadResume />} />
+            <Route path="/interview/setup" element={<InterviewSetup />} />
+            <Route path="/interview/:sessionId" element={<Interview />} />
+            <Route path="/report/:sessionId" element={<Report />} />
+        </Route>
+        
     </Routes>
 )
 }

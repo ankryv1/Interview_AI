@@ -3,6 +3,8 @@ from app.schemas.user_schema import NewUserSignup
 from app.services.auth_service import create_user_service, login_service
 from app.utils.jwt import create_access_token, verify_access_token
 from app.schemas.auth_schema import LoginSchema
+from app.models.user_model import User
+from beanie import PydanticObjectId
 
 router = APIRouter(
     prefix="/auth",
@@ -37,15 +39,18 @@ async def Logout(response:Response):
 
 @router.get("/me")
 async def me(access_token: str = Cookie(None)):
-    print(access_token)
+    # print(access_token)
     if not access_token:
         raise HTTPException(status_code=401, detail="Access token missing")
     
     payload = verify_access_token(access_token)
     print(payload)
+
     if payload is None:
         raise HTTPException(status_code=401, detail="Invalid or expired Token")
-    return { "message": "Authenticated", "user": payload }
+    user = await User.find_one(User.id == PydanticObjectId(payload["user_id"]))
+    print(user)
+    return { "message": "Authenticated", "user": user }
 
 
 
