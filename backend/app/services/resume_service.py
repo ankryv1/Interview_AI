@@ -5,6 +5,8 @@ import uuid
 from app.utils.pdf import extract_text_from_pdf
 from app.rag.splitter import text_splitter
 from app.rag.vector_store import add_resume_to_vector_store
+from app.models.resume_model import Resume
+from app.schemas.resume_schema import ResumeOut
 
 UPLOAD_DIR = "uploads/resumes"
 
@@ -48,3 +50,15 @@ async def upload_resume_service(file: UploadFile, current_user):
 #      2. it reads the uploaded file, and wb write in binary mode
 
 
+async def get_all_resume_service(current_user):
+    print(type(current_user))
+    resumes = await Resume.find(Resume.user_id== str(current_user.id)).to_list()
+    return [
+        ResumeOut(
+        resume_id= str(resume.id),
+        user_id= str(resume.user_id),
+        filename= resume.filename
+    ) for resume in resumes
+    ]
+
+    

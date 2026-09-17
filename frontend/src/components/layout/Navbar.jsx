@@ -9,8 +9,8 @@ const Navbar = () => {
   return (
     <nav className="border-b bg-[#080B12] shadow-sm">
       <Container className="flex items-center justify-between h-16">
-        <Link to="/" className="text-2xl font-bold text-blue-600">
-          InterviewAI
+        <Link to="/" className="text-2xl font-bold text-orange-300 underline">
+          <span className="text-indigo-100">Interview</span>AI
         </Link>
 
         {!loading && (

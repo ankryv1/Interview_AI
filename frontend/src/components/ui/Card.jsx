@@ -4,7 +4,7 @@ const Card = ({children, className="", onClick}) => {
     <div 
     onClick={onClick}
     className={`bg-[#121826] rounded-xl shadow-md 
-            border border-gray-200 p-6 transition 
+            border border-gray-200 p-5 transition 
             hover:shadow-lg ${className}`}>
         {children}
     </div>
