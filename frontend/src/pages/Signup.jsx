@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import signupBanner from "../assets/signup-banner.png";
  
 const Signup = () => {
   const navigate = useNavigate();
+  const { checkAuth} = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +42,7 @@ const Signup = () => {
         { username, email, password },
         { withCredentials: true }
       );
- 
+      await checkAuth();
       navigate("/");
     } catch (error) {
       setError(error.response?.data?.detail || "Signup Failed");

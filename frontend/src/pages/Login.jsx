@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
+import {useAuth} from "../context/AuthContext";
 import login_banner from "../assets/login_banner.jpg";
 import { FaEnvelope, FaLock } from "react-icons/fa";
  
 const Login = () => {
+  const {checkAuth} = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +30,8 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
- 
+      
+      await checkAuth();
       navigate("/");
     } catch (error) {
       setError(error?.response?.data?.message || "Login Failed");

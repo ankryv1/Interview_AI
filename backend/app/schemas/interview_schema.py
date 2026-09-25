@@ -5,7 +5,7 @@ from enum import Enum
 class StartInterviewRequest(BaseModel):
     resume_id: str
     role: str
-    difficuilty: str
+    difficulty: str
     interview_type: str
     total_questions: int
 

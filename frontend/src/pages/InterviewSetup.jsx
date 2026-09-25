@@ -1,11 +1,14 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, navigate} from "react";
 import Card from "../components/ui/Card";
 import api from "../services/api";
 
 const InterviewSetup = () => {
   const [allResumes, setAllResumes] = useState([]);
   const [selectedResume, setSelectedResume] = useState(null);
+  const [targetRole, setTargetRole] = useState(null);
+  const [interviewType, setInterviewType] = useState(null);
+  const [noOfQues, setNoOfQues] = useState(0);
+  const [difficulty, setDifficulty] = useState(null);
 
   const handleUpload = async (e) => {
     const file = e.target.files[0];
@@ -46,9 +49,26 @@ const InterviewSetup = () => {
     getAllResumes();
   }, []);
 
+  const handleSubmitForm= async()=>{
+     try{
+        await api.post("/interview/start",{
+           resume_id: selectedResume,
+           role: targetRole,
+           interview_type: interviewType,
+           total_questions: noOfQues,
+           difficulty
+        })
+        console.log("done");
+        // navigate("/interview")
+     } catch(err){
+        console.log(err);
+     }
+  }
+
+  const isFormCompleted = selectedResume && targetRole?.trim() && interviewType && noOfQues > 0 && difficulty;
+
   return (
     <div className="min-h-screen p-6 md:p-10">
-
       {/* Header */}
       <div className="max-w-5xl mx-auto mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
@@ -61,14 +81,11 @@ const InterviewSetup = () => {
       </div>
 
       <div className="max-w-5xl mx-auto">
-
         {/* Existing Resumes */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-xl font-semibold text-white">
-                Your Resumes
-              </h2>
+              <h2 className="text-xl font-semibold text-white">Your Resumes</h2>
 
               <p className="text-sm text-gray-400 mt-1">
                 Choose the resume you want to use
@@ -81,17 +98,13 @@ const InterviewSetup = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
             {allResumes.map((resume) => {
-              const isSelected =
-                selectedResume === resume.resume_id;
+              const isSelected = selectedResume === resume.resume_id;
 
               return (
                 <Card
                   key={resume.resume_id}
-                  onClick={() =>
-                    setSelectedResume(resume.resume_id)
-                  }
+                  onClick={() => setSelectedResume(resume.resume_id)}
                   className={`relative cursor-pointer transition-all duration-200
                     ${
                       isSelected
@@ -101,20 +114,6 @@ const InterviewSetup = () => {
                   `}
                 >
                   <div className="flex items-center gap-4">
-
-                    {/* PDF Icon */}
-                    <div
-                      className={`w-11 h-11 rounded-lg flex items-center justify-center
-                        ${
-                          isSelected
-                            ? "bg-orange-400/20 text-orange-400"
-                            : "bg-gray-700 text-gray-300"
-                        }
-                      `}
-                    >
-                      <i className="ri-file-pdf-line text-2xl"></i>
-                    </div>
-
                     {/* Resume Name */}
                     <div className="flex-1 min-w-0">
                       <h3
@@ -124,9 +123,7 @@ const InterviewSetup = () => {
                         {resume.filename}
                       </h3>
 
-                      <p className="text-xs text-gray-500 mt-1">
-                        PDF Resume
-                      </p>
+                      <p className="text-xs text-gray-500 mt-1">PDF Resume</p>
                     </div>
 
                     {/* Selected Indicator */}
@@ -148,9 +145,10 @@ const InterviewSetup = () => {
                            transition-all duration-200"
               >
                 <div className="flex items-center gap-4 h-full">
-
-                  <div className="w-11 h-11 rounded-lg bg-orange-400/10
-                                  flex items-center justify-center">
+                  <div
+                    className="w-11 h-11 rounded-lg bg-orange-400/10
+                                  flex items-center justify-center"
+                  >
                     <i className="ri-upload-cloud-2-line text-2xl text-orange-400"></i>
                   </div>
 
@@ -159,11 +157,8 @@ const InterviewSetup = () => {
                       Upload New Resume
                     </h3>
 
-                    <p className="text-xs text-gray-500 mt-1">
-                      PDF files only
-                    </p>
+                    <p className="text-xs text-gray-500 mt-1">PDF files only</p>
                   </div>
-
                 </div>
 
                 <input
@@ -181,18 +176,15 @@ const InterviewSetup = () => {
         {selectedResume && (
           <div className="mt-8 p-4 rounded-xl border border-orange-400/30 bg-orange-400/5">
             <div className="flex items-center gap-3">
-              <i className="ri-checkbox-circle-fill text-orange-400 text-xl"></i>
+              <i className="ri-checkbox-circle-fill text-yellow-400 text-xl"></i>
 
               <div>
-                <p className="text-xs text-gray-500">
-                  Selected Resume
-                </p>
+                <p className="text-xs text-gray-500">Selected Resume</p>
 
                 <p className="text-sm font-medium text-white">
                   {
                     allResumes.find(
-                      (resume) =>
-                        resume.resume_id === selectedResume
+                      (resume) => resume.resume_id === selectedResume,
                     )?.filename
                   }
                 </p>
@@ -201,13 +193,146 @@ const InterviewSetup = () => {
           </div>
         )}
 
+        {/* Other Questions */}
+
+        <div className="flex flex-col gap-4 m-4">
+          <h1 className="ring-2 rounded-xl p-3 w-fit bg-pink-900 text-[16px] sm:text-xl">
+            Your Target Role
+          </h1>
+          <h2>What role are you preparing for?</h2>
+          <input
+            type="text"
+            value={targetRole}
+            onChange={(e) => setTargetRole(e.target.value)}
+            placeholder="Role"
+            className="w-[60%] p-4 rounded-lg bg-[#121826] border border-gray-400 text-white focus:outline-none focus:border-orange-400"
+          />
+          <h2 className="">Select Popular Roles</h2>
+          <div className="flex flex-row gap-4 cursor-pointer flex-wrap">
+            {[
+              "Backend Developer",
+              "Frontend Developer",
+              "Full Stack Developer",
+              "Data Engineer",
+              "Software Engineer",
+            ].map((role) => {
+              const isSelected = role === targetRole;
+              return (
+                <Card
+                  key={role}
+                  onClick={() => setTargetRole(role)}
+                  className={`${isSelected ? "border-2 border-white" : "border-2 border-gray-600"}`}
+                >
+                  {role}
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 mt-10">
+          <h1 className="ring-2 rounded-xl p-3 w-fit bg-pink-900 text-xl">
+            Select Interview Type
+          </h1>
+          <div className="flex flex-row gap-4 text-white flex-wrap">
+            {["Technical", "Behavioural", "HR"].map((type) => (
+              <Card
+                key={type}
+                onClick={() => {
+                  setInterviewType(type);
+                  console.log(interviewType);
+                }}
+                className={`${type === interviewType ? "border-2 border-amber-300" : "border-2 border-gray-400 hover:border-gray-500"}`}
+              >
+                {type}
+              </Card>
+            ))}
+          </div>
+        </div>
+<div className="mt-8 sm:mt-10">
+
+  {/* Number of Questions */}
+  <div className="flex flex-col gap-5">
+    <h1 className="w-fit rounded-xl bg-pink-900 px-4 py-3 text-lg sm:text-xl font-semibold text-white ring-1 ring-pink-500/40 shadow-lg">
+      Choose No. of Questions
+    </h1>
+
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5 p-2 sm:p-4">
+      {[3, 5, 8, 10].map((no) => (
+        <Card
+          key={no}
+          onClick={() => setNoOfQues(no)}
+          className={`
+
+            flex items-center justify-center
+            min-h-[70px] sm:min-h-[85px]
+            rounded-2xl
+            cursor-pointer
+            text-xl sm:text-2xl
+            font-bold
+            transition-all duration-200
+            select-none
+
+            ${
+              no === noOfQues
+                ? "border-2 border-amber-300 bg-amber-300/10 text-amber-200 shadow-[0_0_20px_rgba(252,211,77,0.15)] scale-[1.02]"
+                : "border border-gray-600 bg-gray-900/60 text-gray-200 hover:border-gray-400 hover:bg-gray-800 hover:scale-[1.02]"
+            }
+          `}
+        >
+          {no}
+        </Card>
+      ))}
+    </div>
+  </div>
+
+
+  {/* Difficulty */}
+  <div className="flex flex-col gap-5 mt-10 sm:mt-12">
+
+    <h1 className="w-fit rounded-xl bg-pink-900 px-4 py-3 text-lg sm:text-xl font-semibold text-white ring-1 ring-pink-500/40 shadow-lg">
+      Choose Difficulty Level
+    </h1>
+
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 p-2 sm:p-4">
+
+      {["Easy", "Medium", "Hard"].map((level) => (
+        <Card
+          key={level}
+          onClick={() => setDifficulty(level)}
+          className={`
+
+            flex items-center justify-center
+            min-h-[70px] sm:min-h-[85px]
+            rounded-2xl
+            cursor-pointer
+            text-lg sm:text-xl
+            font-semibold
+            transition-all duration-200
+            select-none
+
+            ${
+              level === difficulty
+                ? "border-2 border-amber-300 bg-amber-300/10 text-amber-200 shadow-[0_0_20px_rgba(252,211,77,0.15)] scale-[1.02]"
+                : "border border-gray-600 bg-gray-900/60 text-gray-200 hover:border-gray-400 hover:bg-gray-800 hover:scale-[1.02]"
+            }
+          `}
+        >
+          {level}
+        </Card>
+      ))}
+
+    </div>
+  </div>
+</div>
         {/* Continue Button */}
         <div className="flex justify-end mt-8">
           <button
-            disabled={!selectedResume}
+            disabled={!isFormCompleted}
+            onClick = {() => handleSubmitForm()}
             className={`px-6 py-3 rounded-lg font-medium transition-all
               ${
-                selectedResume
+                isFormCompleted
                   ? "bg-orange-400 text-black hover:bg-orange-300"
                   : "bg-gray-700 text-gray-500 cursor-not-allowed"
               }
@@ -217,7 +342,6 @@ const InterviewSetup = () => {
             <i className="ri-arrow-right-line ml-2"></i>
           </button>
         </div>
-
       </div>
     </div>
   );
@@ -225,9 +349,7 @@ const InterviewSetup = () => {
 
 export default InterviewSetup;
 
-
 //  Old  UI
-
 
 // import React, { useState, useEffect } from "react";
 
