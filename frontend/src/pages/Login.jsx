@@ -4,6 +4,7 @@ import api from "../services/api";
 import {useAuth} from "../context/AuthContext";
 import login_banner from "../assets/login_banner.jpg";
 import { FaEnvelope, FaLock } from "react-icons/fa";
+import  toast from "react-hot-toast";
  
 const Login = () => {
   const {checkAuth} = useAuth();
@@ -32,9 +33,12 @@ const Login = () => {
       );
       
       await checkAuth();
+      toast.success("Logged in successfully");
       navigate("/");
     } catch (error) {
-      setError(error?.response?.data?.message || "Login Failed");
+      const message = error?.response?.data?.message || "Login Failed"
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }

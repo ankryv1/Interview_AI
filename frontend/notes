@@ -11,3 +11,5 @@ components/	"What does this piece of UI look like?"
 
 
 children REACT me jo bhi nest between opening and closing tags vo le leta h AUTOMATICALLY
+
+ also reduced unnecessary api calls like sending the only needed data in the page by props, and made it like capable of fetching data if state is not available(ex like when user refreshes page, state  becomes empty)

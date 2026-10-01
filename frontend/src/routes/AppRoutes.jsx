@@ -3,11 +3,10 @@ import  Landing  from "../pages/Landing";
 import  Login  from "../pages/Login";
 import  Signup  from "../pages/Signup";
 import  Dashboard from "../pages/Dashboard";
-import  UploadResume  from "../pages/UploadResume";
 import InterviewSetup  from "../pages/InterviewSetup";
 import Interview from "../pages/Interview";
-import  Report  from "../pages/Report";
 import MainLayout from "../components/layout/MainLayout";
+import InterviewReport from "../pages/InterviewReport";
 
 export const AppRoutes = () =>{
     return(
@@ -17,10 +16,10 @@ export const AppRoutes = () =>{
         <Route element={<MainLayout/>}>
             <Route path="/" element={<Landing />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/upload-resume" element={<UploadResume />} />
             <Route path="/interview/setup" element={<InterviewSetup />} />
             <Route path="/interview/:sessionId" element={<Interview />} />
-            <Route path="/report/:sessionId" element={<Report />} />
+            <Route path="/report/:sessionId" element={<InterviewReport />} />
+            
         </Route>
         
     </Routes>

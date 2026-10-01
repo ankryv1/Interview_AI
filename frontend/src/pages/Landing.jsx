@@ -1,13 +1,15 @@
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import Container from "../components/layout/Container";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+import { useAuth } from "../context/AuthContext";
 import { FaFileAlt, FaMicrophone, FaRobot, FaChartBar } from "react-icons/fa";
 
 export default function Landing() {
+  const { user } = useAuth();
 
   const navigate = useNavigate();
 
@@ -21,7 +23,8 @@ export default function Landing() {
             <span className="bg-red-600 px-3 pb-4 rounded-full text-6xl font-semibold mx-1 align-middle text-[#F5F7FA]">
               Your
             </span>{" "}
-            <span className='text-orange-300 italic '>TECHNICAL</span>  <span className="text-[#A78BFA]">Interviews</span>
+            <span className="text-orange-300 italic ">TECHNICAL</span>{" "}
+            <span className="text-[#A78BFA]">Interviews</span>
           </h1>
 
           <p className="mt-6 text-lg text-[#98A2B3] max-w-2xl mx-auto">
@@ -29,10 +32,10 @@ export default function Landing() {
             feedback, and improve your confidence.
           </p>
 
-          <div className="mt-10 flex justify-center gap-4 flex-wrap">
-            <Button className="text-2xl" onClick={()=> navigate("/signup")}>Start Interview</Button>
-
-            <Button variant="outline">Upload Resume</Button>
+          <div className="mt-10  ">
+            <Button className="text-3xl shadow-lg shadow-gray-300 hover:shadow-indigo-500/80 transition-shadow duration-300" onClick={() =>{{ user? navigate("/dashboard"):navigate("/signup")}}}>
+              Start Interview
+            </Button>
           </div>
         </Container>
       </section>
@@ -80,9 +83,7 @@ export default function Landing() {
             <Card>
               <FaRobot className="text-4xl text-[#6366F1] mb-4" />
 
-              <h3 className="font-bold text-xl text-[#34D399]">
-                AI Feedback
-              </h3>
+              <h3 className="font-bold text-xl text-[#34D399]">AI Feedback</h3>
 
               <p className="text-[#98A2B3] mt-2">
                 Get detailed feedback on your technical answers and
@@ -181,30 +182,26 @@ export default function Landing() {
       <section className="py-24 bg-[#0D111C]">
         <Container>
           <div className="text-center">
-
             <h2 className="text-4xl md:text-5xl font-bold text-[#F5F7FA]">
               Ready to Ace Your Next Interview?
             </h2>
 
             <p className="mt-6 text-lg text-[#98A2B3] max-w-2xl mx-auto">
-              Practice with AI-powered mock interviews and get
-              personalized feedback to improve your performance.
+              Practice with AI-powered mock interviews and get personalized
+              feedback to improve your performance.
             </p>
 
             <div className="mt-10">
               <Button
-                onClick={() => navigate("/signup")}
-                className="hover:bg-[#F5F7FA] hover:text-[#080B12]"
+                onClick={() =>{{user ? navigate("/dashboard") : navigate("/signup")}}}
+                className="hover:bg-[#F5F7FA] hover:text-[#dbdfea] text-2xl shadow-lg shadow-gray-300 hover:shadow-indigo-500/80 transition-shadow duration-300"
               >
                 Get Started
               </Button>
             </div>
-
           </div>
         </Container>
       </section>
-
     </>
   );
 }
-

@@ -5,6 +5,7 @@ import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import signupBanner from "../assets/signup-banner.png";
+import toast from "react-hot-toast";
  
 const Signup = () => {
   const navigate = useNavigate();
@@ -43,9 +44,12 @@ const Signup = () => {
         { withCredentials: true }
       );
       await checkAuth();
+      toast.success("Signup Successful");
       navigate("/");
     } catch (error) {
-      setError(error.response?.data?.detail || "Signup Failed");
+      const message = error.response?.data?.detail || "Signup Failed"
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }

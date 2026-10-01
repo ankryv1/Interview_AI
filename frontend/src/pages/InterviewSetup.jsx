@@ -1,14 +1,17 @@
-import React, { useState, useEffect, navigate} from "react";
+import React, { useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import Card from "../components/ui/Card";
 import api from "../services/api";
 
 const InterviewSetup = () => {
   const [allResumes, setAllResumes] = useState([]);
   const [selectedResume, setSelectedResume] = useState(null);
-  const [targetRole, setTargetRole] = useState(null);
+  const [targetRole, setTargetRole] = useState("");
   const [interviewType, setInterviewType] = useState(null);
   const [noOfQues, setNoOfQues] = useState(0);
   const [difficulty, setDifficulty] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleUpload = async (e) => {
     const file = e.target.files[0];
@@ -51,15 +54,17 @@ const InterviewSetup = () => {
 
   const handleSubmitForm= async()=>{
      try{
-        await api.post("/interview/start",{
+       const response = await api.post("/interview/start",{
            resume_id: selectedResume,
            role: targetRole,
            interview_type: interviewType,
            total_questions: noOfQues,
            difficulty
         })
-        console.log("done");
-        // navigate("/interview")
+        // console.log(response);
+
+        const session_id = response.data.session_id
+        navigate(`/interview/${session_id}`);
      } catch(err){
         console.log(err);
      }

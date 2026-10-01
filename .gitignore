@@ -4,3 +4,10 @@ __pycache__/
 node_modules/
 dist/
 .vscode/
+
+backend/chroma_db/
+*.sqlite3
+*.bin
+
+# User uploads
+backend/uploads/

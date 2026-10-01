@@ -183,3 +183,14 @@ async def generate_report_service(session):
     report = await structured_report_llm.ainvoke(prompt)
     session.completed = True
     return  report
+
+async def get_interview_service(session_id, current_user):
+    session = await InterviewSession.get(session_id)
+
+    if not session:
+        raise HTTPException(status_code=404, detail="Interview session not found")
+
+    if(str(session.user_id)!= str(current_user.id)):
+        raise HTTPException(status_code=401, detail="Unauthorized access")
+    # print(session)
+    return session
