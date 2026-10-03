@@ -108,8 +108,9 @@ async def generate_final_report_node(state: InterviewState):
                                                  conversation=state["conversation"]
                                                  )
 
-    str_llm = llm.with_structured_output(ReportSchema)
-    response = await str_llm.ainvoke(prompt)
+    structured_llm = llm.with_structured_output(ReportSchema, method="json_schema")
+    
+    response = await structured_llm.ainvoke(prompt)
     return {"final_report": response, "completed": True, "state": InterviewStage.COMPLETED, "stage": InterviewStage.COMPLETED}
 
 
