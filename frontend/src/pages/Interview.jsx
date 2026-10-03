@@ -164,7 +164,7 @@ const Interview = () => {
 
             <div className="mt-5 flex justify-end">
               <Button
-                disabled={setAnswerLoading || !userAnswer.trim()}
+                disabled={answerLoading || !userAnswer.trim()}
                 onClick={() => {
                   handleSubmitAnswer();
                 }}
