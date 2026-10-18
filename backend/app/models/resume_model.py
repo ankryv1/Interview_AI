@@ -7,7 +7,7 @@ class Resume(Document):
     filename: str
     extracted_text: str | None = None
     original_filename: str
-    file_path: str
+    storage_path: str
     processed: bool = False
     uploaded_at: datetime = Field(default_factory=datetime.utcnow)
 

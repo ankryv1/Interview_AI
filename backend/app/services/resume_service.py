@@ -7,33 +7,30 @@ from app.rag.splitter import text_splitter
 from app.rag.vector_store import add_resume_to_vector_store
 from app.models.resume_model import Resume
 from app.schemas.resume_schema import ResumeOut
+from app.services.storage_service import supabase
 
-UPLOAD_DIR = "uploads/resumes"
-
-os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 async def upload_resume_service(file: UploadFile, current_user):
 
-    file_path = os.path.join(UPLOAD_DIR, f"{uuid.uuid4()}_{file.filename}")
-      
-    with open(file_path, "wb") as f:
-        content = await file.read()
-        f.write(content)
+    # reading file contents in bytes,and storing it in bytes in content
+    content = await file.read()
 
+    storage_path = (f"{current_user.id}/{uuid.uuid4()}_{file.filename}")
 
-    extracted_text = extract_text_from_pdf(file_path)
+    # uploading file in supabase
+    supabase.storage.from_("resumes").upload(storage_path, content,{
+        "content-type": file.content_type
+    })
+    extracted_text = extract_text_from_pdf(content)
 
     text_chunks = text_splitter(extracted_text)
     
     
-    print("Text chunks:", text_chunks)
-    print("Number of chunks:", len(text_chunks))
-
     resume = Resume(
         filename=file.filename,
         user_id= str(current_user.id),
         original_filename=file.filename,
-        file_path=file_path,
+        storage_path=storage_path,
         extracted_text=extracted_text,
         processed = True
     )
